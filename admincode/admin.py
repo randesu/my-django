@@ -1,7 +1,12 @@
 from django.contrib import admin
+from unfold.admin import ModelAdmin
 from datetime import datetime
 from time import sleep
 from csv2pdf import convert
+from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
+from django.contrib.auth.models import User, Group
 
 
 # Register your models here.
@@ -20,6 +25,18 @@ from db_posbindu.models import posbindu
 
 
 
+admin.site.unregister(User)
+admin.site.unregister(Group)
+
+
+@admin.register(User)
+class UserAdmin(BaseUserAdmin, ModelAdmin):
+    pass
+
+
+@admin.register(Group)
+class GroupAdmin(BaseGroupAdmin, ModelAdmin):
+    pass
 
 #------------ Define Action -------------#
 
@@ -438,47 +455,47 @@ def printSarprasPDF(modeladmin, request, queryset):
 
 
 #-------------------- Classes -----------------#
-class anggotaDisplay(admin.ModelAdmin):
+class anggotaDisplay(ModelAdmin):
     list_display = ['IdAnggota', 'NamaAnggota']
     actions = [printAnggota, printAnggotaCSVHeader, printAnggotaCsvNoHeader, printAnggotaPDF]
 
-class bayiDisplay(admin.ModelAdmin):
+class bayiDisplay(ModelAdmin):
     list_display = ['IdBayi', 'NamaBayi', 'TanggalLahir']
     actions = [printBayi, printBayiCSVHeader, printAnggotaCsvNoHeader, printBayiPDF]
 
-class jentikDisplay(admin.ModelAdmin):
+class jentikDisplay(ModelAdmin):
     list_display = ['IdRumah', 'NomorRumah', 'KepalaRumah',
                     'AlamatRumah', 'JumlahKontainer', 'KontainerJentik']
     actions = [printJentik, printJentikCSVHeader, printJentikCsvNoHeader, printJentikPDF]
 
-class kegiatanDisplay(admin.ModelAdmin):
+class kegiatanDisplay(ModelAdmin):
     list_display = ['IdKegiatan', 'TanggalKegiatan', 'NamaKegiatan']
     actions = [printKegiatan, printKegiatanCSVHeader, printKegiatanCsvNoHeader, printKegiatanPDF]
 
-class kunjunganDisplay(admin.ModelAdmin):
+class kunjunganDisplay(ModelAdmin):
     list_display = ['IdKunjungan', 'TanggalKunjungan',
                     'NamaKunjungan', 'DeskripsiKunjungan']
     actions = [printKunjungan, printKunjunganCSVHeader, printKunjunganCsvNoHeader, printKunjunganPDF]
 
-class saranDisplay(admin.ModelAdmin):
+class saranDisplay(ModelAdmin):
     list_display = ['IdSaran', 'IsiSaran']
     actions = [printSaran, printSaranCSVHeader, printSaranCsvNoHeader, printSaranPDF]
 
-class sarprasDisplay(admin.ModelAdmin):
+class sarprasDisplay(ModelAdmin):
     list_display = ['IdBarang', 'NamaBarang',
                     'JumlahBarang', 'KondisiBarang']
     actions = [printSarpras, make_published_baik, make_published_buruk, make_published_sedang, printSarprasCSVHeader, printSarprasCsvNoHeader,
                printSarprasPDF]
 
-class ibuHamilDisplay(admin.ModelAdmin):
+class ibuHamilDisplay(ModelAdmin):
     list_display = ['IdIbu', 'NamaIbu',
                     'UmurKehamilan']
 
-class imunisasiDisplay(admin.ModelAdmin):
+class imunisasiDisplay(ModelAdmin):
     list_display = ['IdAnak', 'NamaAnak', 'VaksinKe','JenisVaksin'
                     ]
     
-class posbinduDisplay(admin.ModelAdmin):
+class posbinduDisplay(ModelAdmin):
     list_display = ['IdBindu', 'NamaBindu','AlamatBindu', 'BeratBindu', 'TekananDarahBindu', 'KeluhanBindu']
 
 

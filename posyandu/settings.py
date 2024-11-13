@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 
+from django.templatetags.static import static
+from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -31,6 +35,13 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "unfold",  # before django.contrib.admin
+    "unfold.contrib.filters",  # optional, if special filters are needed
+    "unfold.contrib.forms",  # optional, if special form elements are needed
+    "unfold.contrib.inlines",  # optional, if special inlines are needed
+    "unfold.contrib.import_export",  # optional, if django-import-export package is used
+    "unfold.contrib.guardian",  # optional, if django-guardian package is used
+    "unfold.contrib.simple_history", 
     'anggota',
     'db_bayi',
     'db_jentik',
@@ -144,3 +155,161 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+UNFOLD = {
+    "SITE_TITLE": "Posyandu Bunga Tulip",
+    "SITE_HEADER": "Posyandu Bunga Tulip",
+    "SITE_URL": "/",
+    # "SITE_ICON": lambda request: static("icon.svg"),  # both modes, optimise for 32px height
+    "SITE_ICON": {
+        "light": lambda request: static("assets/logo.png"),  # light mode
+        "dark": lambda request: static("assets/logo.png"),  # dark mode
+    },
+
+    "SIDEBAR": {
+        "show_search": False,  # Search in applications and models names
+        "show_all_applications": False,  # Dropdown with all applications and models
+          "navigation" : [
+               {
+                "title":"Navigation",
+                "separator": True,  # Top border
+                "collapsible": True,  # Collapsible group of links
+                "items": [
+                    {
+                        "title":"Dashboard",
+                        "icon": "dashboard",  # Supported icon set: https://fonts.google.com/icons
+                        "link": reverse_lazy("admin:index"),
+                        # "badge": "sample_app.badge_callback",
+                        "permission": lambda request: request.user.is_superuser,
+                    },      
+                ],
+                },
+                {
+                "title":"Admins",
+                "separator": True,  # Top border
+                "collapsible": True,  # Collapsible group of links
+                "items": [
+                    {
+                        "title":"Admin - Group",
+                        "icon": "admin_panel_settings",
+                        "link": reverse_lazy("admin:auth_group_changelist"),
+                    },
+                    {
+                        "title":"Admin - User",
+                        "icon": "admin_panel_settings",
+                        "link": reverse_lazy("admin:auth_user_changelist"),
+                    },             
+                  ],
+                },
+                {
+                "title":"Anggota Posyandu",
+                "separator": True,  # Top border
+                "collapsible": True,  # Collapsible group of links
+                "items": [
+                    {
+                        "title":"Anggota",
+                        "icon": "people",
+                        "link": reverse_lazy("admin:anggota_anggotaposyandu_changelist"),
+                    },
+                  ],
+                },
+                {
+                "title":"Daftar Bayi",
+                "separator": True,  # Top border
+                "collapsible": True,  # Collapsible group of links
+                "items": [
+                    {
+                        "title":"Bayi",
+                        "icon": "list_alt",
+                        "link": reverse_lazy("admin:db_bayi_bayi_changelist"),
+                    },
+                  ],
+                },
+                {
+                "title":"Daftar ibu hamil",
+                "separator": True,  # Top border
+                "collapsible": True,  # Collapsible group of links
+                "items": [
+                    {
+                        "title":"Ibu Hamil",
+                        "icon": "list_alt",
+                        "link": reverse_lazy("admin:db_ibuhamil_ibuhamil_changelist"),
+                    },
+                  ],
+                },
+                {
+                "title":"Daftar imunisasi",
+                "separator": True,  # Top border
+                "collapsible": True,  # Collapsible group of links
+                "items": [
+                    {
+                        "title":"imunisasi",
+                        "icon": "list_alt",
+                        "link": reverse_lazy("admin:db_imunisasi_imunisasi_changelist"),
+                    },
+                  ],
+              },
+                {
+                "title":"Daftar posbindu",
+                "separator": True,  # Top border
+                "collapsible": True,  # Collapsible group of links
+                "items": [
+                    {
+                        "title":"list posbindu",
+                        "icon": "list_alt",
+                        "link": reverse_lazy("admin:db_posbindu_posbindu_changelist"),
+                    },
+                  ],
+              },
+                {
+                "title":"jadwal kegiatan",
+                "separator": True,  # Top border
+                "collapsible": True,  # Collapsible group of links
+                "items": [
+                    {
+                        "title":"jadwal",
+                        "icon": "schedule",
+                        "link": reverse_lazy("admin:jadwal_kegiatan_jadwalkegiatan_changelist"),
+                    },
+                  ],
+              },
+                {
+                "title":"jadwal kunjungan",
+                "separator": True,  # Top border
+                "collapsible": True,  # Collapsible group of links
+                "items": [
+                    {
+                        "title":"jadwal",
+                        "icon": "schedule",
+                        "link": reverse_lazy("admin:jadwal_kunjungan_jadwalkunjungan_changelist"),
+                    },
+                  ],
+              },
+                {
+                "title":"kotak saran",
+                "separator": True,  # Top border
+                "collapsible": True,  # Collapsible group of links
+                "items": [
+                    {
+                        "title":"saran",
+                        "icon": "mark_unread_chat_alt",
+                        "link": reverse_lazy("admin:kotaksaran_kotaksaran_changelist"),
+                    },
+                  ],
+              },
+                {
+                "title":"sarana prasarana",
+                "separator": True,  # Top border
+                "collapsible": True,  # Collapsible group of links
+                "items": [
+                    {
+                        "title":"list sarpras",
+                        "icon": "warehouse",
+                        "link": reverse_lazy("admin:sarpras_sarpras_changelist"),
+                    },
+                  ],
+              },
+              ],
+    },
+    
+    
+}
