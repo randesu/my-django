@@ -9,6 +9,35 @@ from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
 from django.contrib.auth.models import User, Group
 
 
+from django.contrib import admin
+from django.contrib.auth.models import User
+from django.core.validators import EMPTY_VALUES
+from django.utils.translation import gettext_lazy as _
+from unfold.admin import ModelAdmin
+from unfold.contrib.filters.admin import TextFilter, FieldTextFilter, RangeDateFilter, RangeDateTimeFilter
+
+
+class CustomTextFilter(TextFilter):
+    title = _("Custom filter")
+    parameter_name = "query_param_in_uri"
+
+    def queryset(self, request, queryset):
+        if self.value() not in EMPTY_VALUES:
+            # Here write custom query
+            return queryset.filter(your_field=self.value())
+
+        return queryset
+
+
+# class MyAdmin(ModelAdmin):
+#     list_display = ["NamaAnggota"]
+#     list_filter_submit = True  # Submit button at the bottom of the filter
+#     list_filter = [
+#         ("model_charfield", FieldTextFilter),
+#         CustomTextFilter
+#     ]
+
+
 # Register your models here.
 #from barangRental.models import barangRental
 
@@ -27,6 +56,7 @@ from db_posbindu.models import posbindu
 
 admin.site.unregister(User)
 admin.site.unregister(Group)
+# admin.site.unregister(anggotaPosyandu)
 
 
 @admin.register(User)
@@ -456,6 +486,11 @@ def printSarprasPDF(modeladmin, request, queryset):
 
 #-------------------- Classes -----------------#
 class anggotaDisplay(ModelAdmin):
+    list_display = ["NamaAnggota"]
+    list_filter_submit = True  # Submit button at the bottom of the filter
+    list_filter = [
+        ("NamaAnggota", FieldTextFilter),
+        CustomTextFilter]
     list_display = ['IdAnggota', 'NamaAnggota']
     actions = [printAnggota, printAnggotaCSVHeader, printAnggotaCsvNoHeader, printAnggotaPDF]
 
@@ -469,6 +504,10 @@ class jentikDisplay(ModelAdmin):
     actions = [printJentik, printJentikCSVHeader, printJentikCsvNoHeader, printJentikPDF]
 
 class kegiatanDisplay(ModelAdmin):
+    list_filter_submit = True  # Submit button at the bottom of the filter
+    list_filter = (
+        ("TanggalKegiatan", RangeDateFilter),  # Date filter
+    )
     list_display = ['IdKegiatan', 'TanggalKegiatan', 'NamaKegiatan']
     actions = [printKegiatan, printKegiatanCSVHeader, printKegiatanCsvNoHeader, printKegiatanPDF]
 
